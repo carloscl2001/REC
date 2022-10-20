@@ -67,6 +67,7 @@ public class ej1{
         */
 
         //Ejercicio 7
+        /* */
         Pattern pat = Pattern.compile(".*2(?!6).*");
         Matcher mat = pat.matcher(cadena);
 
