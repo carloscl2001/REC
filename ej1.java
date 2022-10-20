@@ -6,7 +6,7 @@ import java.util.regex.Matcher;
 
 public class ej1{
 
-    private static final String cadena = "226";
+    private static final String cadena = "27";
  
     public static void main(String[] args) {
         
@@ -67,8 +67,7 @@ public class ej1{
         */
 
         //Ejercicio 7
-        /* */
-        Pattern pat = Pattern.compile(".*2(?!6).*");
+        Pattern pat = Pattern.compile("[a-zA-Z]{5,10}");
         Matcher mat = pat.matcher(cadena);
 
         if(mat.matches()){
