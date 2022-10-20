@@ -1,16 +1,38 @@
-import java.util.regrex.Pattern;
-import java.util.regrex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 public class ej1{
-    public static void main(String[] cadena) {
+
+    private static final String cadena = "1bc11111";
+ 
+    public static void main(String[] args) {
         
-        Pattern pat = Pattern.compile("abc");
+        /**
+         * EJERCICIO 1
+         */
+        Pattern pat = Pattern.compile("abc.*");
         Matcher mat = pat.matcher(cadena);
 
-        if (mat.matches()){
-            System.out.println("SI");
-           } else {
-            System.out.println("NO");
-        }
+        
+        if(mat.matches()){
+            System.out.println("Si");
+        }else {System.out.println("No");}
+
+
+        /**
+         * EJERCICIO 2
+         */
+        Pattern pat = Pattern.compile("abc.*|Abc");
+        Matcher mat = pat.matcher(cadena);
+
+        
+        if(mat.matches()){
+            System.out.println("Si");
+        }else {System.out.println("No");}
+
+
+        
+
+
     }
 }
