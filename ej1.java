@@ -6,7 +6,7 @@ import java.util.regex.Matcher;
 
 public class ej1{
 
-    private static final String cadena = "7118";
+    private static final String cadena = "226";
  
     public static void main(String[] args) {
         
@@ -47,11 +47,33 @@ public class ej1{
         if(mat.matches()){
             System.out.println("Si");
         }else {System.out.println("No");}
+
+
+        //Ejercicio 5
+        pat = Pattern.compile("[la]");
+        mat = pat.matcher(cadena);
+
+        if(mat.matches()){
+            System.out.println("Si");
+        }else {System.out.println("No");}
+
+
+        //Ejercicio 6
+        pat = Pattern.compile(".*2(?!6).*");
+        mat = pat.matcher(cadena);
+
+        if(mat.matches()){
+            System.out.println("Si");
+        }else {System.out.println("No");}
         */
 
-        Pattern pat = Pattern.compile(cadena);
+        //Ejercicio 7
+        Pattern pat = Pattern.compile(".*2(?!6).*");
         Matcher mat = pat.matcher(cadena);
-        
+
+        if(mat.matches()){
+            System.out.println("Si");
+        }else {System.out.println("No");}
 
 
     }
