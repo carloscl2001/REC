@@ -20,7 +20,6 @@ public class ej1{
         }else {System.out.println("No");}
         
 
-//////
         //Ejercicio 2
         pat = Pattern.compile("^(ABC|abc).*");
         mat = pat.matcher(cadena);
