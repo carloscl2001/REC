@@ -117,7 +117,7 @@ public class ej1{
         Matcher mat = pat.matcher(cadena);
 
         if(mat.matches()){
-            System.out.println("Si");
+        System.out.println("Si");
         }else {System.out.println("No");}
 
     }
