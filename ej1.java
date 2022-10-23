@@ -4,9 +4,11 @@ import javax.swing.border.MatteBorder;
 
 import java.util.regex.Matcher;
 
+import java.io.*;
+
 public class ej1{
 
-    private static final String cadena = " 23-34567";
+    //private static final String cadena = "v1agra";
  
     public static void main(String[] args) {
         
@@ -109,16 +111,54 @@ public class ej1{
         if(mat.matches()){
             System.out.println("Si");
         }else {System.out.println("No");}
-        */
+        
 
         //Ejercicio 12
-        //" 23-34567"
-        Pattern pat = Pattern.compile("\\s\\d{2}\\-\\d{5}");
-        Matcher mat = pat.matcher(cadena);
+        pat = Pattern.compile("(P\\s\\d{2}-\\d{5})|(P-\\d{2}-\\d{4})|(P#\\s\\d{2}\\s\\d{4})|(P#\\s\\d{2}\\s\\d{4})|(P#\\d{2}-\\d{4})|(P\\s\\d{6})");
+        mat = pat.matcher(cadena);
 
         if(mat.matches()){
         System.out.println("Si");
         }else {System.out.println("No");}
+       
+        
+        //Ejercicio 13
+        pat = Pattern.compile("[@]");
+        mat = pat.matcher(cadena);
+        String res = mat.replaceAll("a");
 
+        pat = Pattern.compile("[1!¡]");
+        mat = pat.matcher(res);
+        res = mat.replaceAll("i");
+
+        if (!res.equals(cadena)){
+            System.out.println("Intento de saltarse spam");
+        }else{System.out.println("No Spam");}
+        
+
+        //Ejercicio 14
+        Pattern pat = Pattern.compile("<img.*[\\r\\n]*.*src=\".*\"");
+        int cont = 0;
+        //Suponemos que la pagina de la uca es un txt
+        File file = new File("uca.txt");
+
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+        
+            for (String line = br.readLine(); line != null;) {
+                Matcher mat = pat.matcher(line);
+                if (mat.matches()) {
+                    System.out.println(mat.group());
+                    ++cont;
+                }
+            }
+            System.out.println("Numero de veces en las que aparece una imagen -> " + cont);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        */
+        
+
+        
+    
     }
 }
