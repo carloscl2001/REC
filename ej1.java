@@ -6,11 +6,19 @@ import javax.swing.border.MatteBorder;
 import java.util.regex.Matcher;
 
 import java.io.*;
-
+/**
+ * Ejercios [1-14]
+ * @author Carlos Antonio Cortés Lora 
+ */
 public class ej1{
 
     private static String cadena = "www.abc.com";
 
+
+    /** 
+     * EJERCICIO 1 -> Si la cadena empieza abc
+     * @author Carlos  A. Cortés Lora
+     */
     public static void ej11(){
         Pattern pat = Pattern.compile("abc.*");
         Matcher mat = pat.matcher(cadena);
@@ -19,8 +27,12 @@ public class ej1{
             System.out.println("Si");
         }else {System.out.println("No");}
     }
-    
-    //Ejercicio 2
+
+
+    /** 
+     * EJERCICIO 2 -> Si la cadena empieza por ABC o abc
+     * @author Carlos  A. Cortés Lora
+     */
     public static void ej2(){
         Pattern pat = Pattern.compile("^(ABC|abc).*");
         Matcher mat = pat.matcher(cadena);
@@ -32,7 +44,10 @@ public class ej1{
     
     
 
-    //Ejercio 3
+    /** 
+     * EJERCICIO 3 -> Si la cadena no empieza por digito
+     * @author Carlos  A. Cortés Lora
+     */
     public static void ej3(){
         Pattern pat = Pattern.compile("\\D.*");
         Matcher mat = pat.matcher(cadena);
@@ -43,7 +58,10 @@ public class ej1{
     }
     
     
-    //Ejercicio 4
+    /** 
+     * EJERCICIO 4 -> Si la cadena no acaba por digito
+     * @author Carlos  A. Cortés Lora
+     */
     public static void ej4(){
         Pattern pat = Pattern.compile(".*\\D");
         Matcher mat = pat.matcher(cadena);
@@ -54,7 +72,10 @@ public class ej1{
         }else {System.out.println("Si acaba por digito");}
     }
 
-    //Ejercicio 5
+    /** 
+     * EJERCICIO 5 -> Si la cadena solo contiene los caracteres "l" o "a"
+     * @author Carlos  A. Cortés Lora
+     */
     public static void ej5(){
         Pattern pat = Pattern.compile("[la]");
         Matcher mat = pat.matcher(cadena);
@@ -64,7 +85,10 @@ public class ej1{
         }else {System.out.println("No los contiene");}
     }
 
-    //Ejercicio 6
+    /** 
+     * EJERCICIO 6 -> Si la cadena  contiene un2 y ese no está seguido por un 6
+     * @author Carlos  A. Cortés Lora
+     */
     public static void ej6() {
         Pattern pat = Pattern.compile(".*2(?!6).*");
         Matcher mat = pat.matcher(cadena);
@@ -74,7 +98,10 @@ public class ej1{
         }else {System.out.println("No lo cumple");}
     }
 
-    //Ejercicio 7
+    /** 
+     * EJERCICIO 7 -> Si la cadena está formada por un mínimo de 5 letras mayúsculas o minúsculas y un máximo de 10
+     * @author Carlos A. Cortés Lora
+     */
     public static void ej7() {
         Pattern pat = Pattern.compile("[a-zA-Z]{5,10}");
         Matcher mat = pat.matcher(cadena);
@@ -84,7 +111,10 @@ public class ej1{
         }else {System.out.println("No");}
     }
 
-    //Ejercicio 8
+    /** 
+     * EJERCICIO 8 -> Si la cadena es una dirección web que comience por www y sea de un servidor español
+     * @author Carlos A. Cortés Lora
+     */
     public static void ej8() {
         Pattern pat = Pattern.compile("www.*\\.*.es");
         Matcher mat = pat.matcher(cadena);
@@ -95,7 +125,10 @@ public class ej1{
         
     }
     
-    //Ejercicio 9
+    /** 
+     * EJERCICIO 9 -> Si la cadena  es una fecha dd/mm/yy
+     * @author Carlos A. Cortés Lora
+     */
     private static void ej9() {
         Pattern pat = Pattern.compile("\\d\\d/\\d\\d/\\d\\d");
         Matcher mat = pat.matcher(cadena);
@@ -105,7 +138,10 @@ public class ej1{
         }else {System.out.println("No");}
     }
 
-    //Ejercicio 10
+    /** 
+     * EJERCICIO 10 -> Si la cadena contiene una dirección IP
+     * @author Carlos A. Cortés Lora
+     */
     private static void ej10() {
         Pattern pat = Pattern.compile("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}");
         Matcher mat = pat.matcher(cadena);
@@ -115,7 +151,11 @@ public class ej1{
         }else {System.out.println("No");}
     }
 
-    //Ejercicio 11
+    /** 
+     * EJERCICIO 11 -> Si la cadena contiene una dirección IP
+     * @author Carlos A. Cortés Lora
+     * @param exp_regular = ("[+]\\d{2}\\ \\d{2}\\ \\d{7}")
+     */
     private static void ej111() {
         Pattern pat = Pattern.compile("[+]\\d{2}\\ \\d{2}\\ \\d{7}");
         Matcher mat = pat.matcher(cadena);
@@ -125,7 +165,10 @@ public class ej1{
         }else {System.out.println("No");}
     }
 
-    //Ejercicio 12
+    /** 
+     * EJERCICIO 12 -> Si la cadena contiene es el número de pedido de una empresa
+     * @author Carlos A. Cortés Lora
+     */
     private static void ej12() {
         Pattern pat = Pattern.compile("(P\\s\\d{2}-\\d{5})|(P-\\d{2}-\\d{4})|(P#\\s\\d{2}\\s\\d{4})|(P#\\s\\d{2}\\s\\d{4})|(P#\\d{2}-\\d{4})|(P\\s\\d{6})");
         Matcher mat = pat.matcher(cadena);
@@ -135,7 +178,10 @@ public class ej1{
         }else {System.out.println("No");}
     }
 
-    //Ejercicio 13
+    /** 
+     * EJERCICIO 13 -> Si la cadena evita el spam
+     * @author Carlos A. Cortés Lora
+     */
     private static void ej13() {
         Pattern pat = Pattern.compile("[@]");
         Matcher mat = pat.matcher(cadena);
@@ -150,7 +196,11 @@ public class ej1{
         }else{System.out.println("No Spam");}
     }
 
-    //Ejercicio 14
+    /** 
+     * EJERCICIO 14 -> Si la cadena evita el spam
+     * @author Carlos A. Cortés Lora
+     * @return 43 fotos
+     */
     private static void ej14(){
         Pattern pat = Pattern.compile("<img.*");
         int cont = 0;
@@ -171,6 +221,12 @@ public class ej1{
             e.printStackTrace();
         }
     }
+
+
+    /** 
+     * MAIN -> Main para probar las funciones de este archivo
+     * @author Carlos  A. Cortés Lora
+     */
     public static void main(String[] args) {
         Scanner s = new Scanner(System.in);
         System.out.print("Elige un ejericio -> ");

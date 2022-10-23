@@ -7,9 +7,15 @@ import java.util.regex.*;
 
 
 
-
+/**
+ * Ejercios [15-20]
+ * @author Carlos Antonio Cortés Lora 
+ */
 public class ej2 {
-    //Ejericio 15
+    /** 
+     * EJERCICIO 15 -> Nos dan el msmo resultado, aunque no es el correcto
+     * @author Carlos  A. Cortés Lora
+     */
     public static void ej15()
     {
         String cadena = "<a>uno</a><b>dos</b><c>tres</c><d>cuatro</d><e>cinco</e>";
@@ -50,7 +56,13 @@ public class ej2 {
 
         System.out.println("Entre todos los propuestos el resultado es el mismo, pero no es el deseado.");
     }
-    //Ejercicio 16
+
+
+    /** 
+     * EJERCICIO 16-20 -> En esta función se incluye todas las funcionaldades
+     * @author Carlos  A. Cortés Lora
+     * @return devuelve el texto tras las 5 funciones
+     */
     public static void ej16(String file){
         
         String res = "";
@@ -101,6 +113,11 @@ public class ej2 {
         System.out.println(res);
     }
 
+
+    /** 
+     * MAIN -> Main para probar las funciones de este archivo
+     * @author Carlos  A. Cortés Lora
+     */
     public static void main(String[] args) {
         Scanner s = new Scanner(System.in);
         System.out.print("Elige un ejericio -> ");
