@@ -12,7 +12,7 @@ import java.io.*;
  */
 public class ej1{
 
-    private static String cadena = "www.abc.com";
+    private static String cadena = "cadenita";
 
 
     /** 
@@ -77,7 +77,7 @@ public class ej1{
      * @author Carlos  A. Cortés Lora
      */
     public static void ej5(){
-        Pattern pat = Pattern.compile("[la]");
+        Pattern pat = Pattern.compile("[la]+");
         Matcher mat = pat.matcher(cadena);
 
         if(mat.matches()){
