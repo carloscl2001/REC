@@ -1,18 +1,16 @@
 import java.util.regex.Pattern;
 import java.util.*;
-
 import javax.swing.border.MatteBorder;
-
 import java.util.regex.Matcher;
-
 import java.io.*;
+
 /**
  * Ejercios [1-14]
  * @author Carlos Antonio Cortés Lora 
  */
 public class ej1{
 
-    private static String cadena = "cadenita";
+    private static String cadena = "P#45-7777";
 
 
     /** 
@@ -204,7 +202,6 @@ public class ej1{
     private static void ej14(){
         Pattern pat = Pattern.compile("<img.*");
         int cont = 0;
-        //Suponemos que la pagina de la uca es un txt
 
         try{
             File pagina = new File("uca.html");
