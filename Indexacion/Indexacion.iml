@@ -7,7 +7,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="googlecode.json.simple" level="project" />
     <orderEntry type="library" name="google.code.gson" level="project" />
+    <orderEntry type="module" module-name="Consulta" />
+    <orderEntry type="module" module-name="Consulta" />
   </component>
 </module>

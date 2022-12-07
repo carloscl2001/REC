@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
 
 
@@ -100,7 +101,6 @@ public class Main {
                     LongitudPeso.put(sDoc, LongitudPeso.get(sDoc) + Math.pow(peso, 2));
                 }
                 else{LongitudPeso.put(sDoc, 0.0);}
-
             }
         }
     }
@@ -110,11 +110,11 @@ public class Main {
         PrintWriter pw ;
         try
         {
-            fichero = new FileWriter("longDocumentos.txt");
+            fichero = new FileWriter("C:\\Users\\carlo\\Desktop\\REC\\longDocumentos.txt");
             pw = new PrintWriter(fichero);
 
-            for (String sDoc : LongitudPeso.keySet()) {
-                pw.println(sDoc + " " + LongitudPeso.get(sDoc));
+            for (String Documento : LongitudPeso.keySet()) {
+                pw.println(Documento + " " + LongitudPeso.get(Documento));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -129,10 +129,19 @@ public class Main {
     }
 
     public static void escribirFicheroIndiceInvertido() {
-        String path = "IndiceInvertido.json";
+        String path = "C:\\Users\\carlo\\Desktop\\REC\\IndiceInvertido.json";
+        Json json = new Json();
+        List<structJson> sJson = new ArrayList<structJson>();
         try (PrintWriter out = new PrintWriter(new FileWriter(path))) {
             Gson gson = new Gson();
-            String jsonString = gson.toJson(IndiceInvertido);
+            for (String sTerm :IndiceInvertido.keySet()) {
+                sJson = new ArrayList<structJson>();
+                for (String sDoc : IndiceInvertido.get(sTerm).parejaDocIDPeso.keySet()) {
+                    sJson.add(new structJson(sDoc, IndiceInvertido.get(sTerm).parejaDocIDPeso.get(sDoc)));
+                }
+                json.lista.add(new AlmacenJson(sTerm, IndiceInvertido.get(sTerm).obtenerIDF(), sJson));
+            }
+            String jsonString = gson.toJson(json);
             out.write(jsonString);
         } catch (Exception e) {
             e.printStackTrace();

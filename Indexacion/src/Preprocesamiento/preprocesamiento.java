@@ -12,7 +12,7 @@ public class preprocesamiento {
     private gestorFiltro gfCaracteres = new gestorFiltro();
 
     //Constructor de la clase preprocesamiento
-    public preprocesamiento() {
+    public preprocesamiento(){
         anadirFiltro();
     }
 
@@ -30,16 +30,15 @@ public class preprocesamiento {
     //Método para eliminar los términos vacíos de la lista de términos
     public void eliminarTerminosVacios(ArrayList<String> listaTerminosDocumento) throws Exception {
 
-        BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\carlo\\IdeaProjects\\Indexacion\\src\\Preprocesamiento\\empty.txt"));
+        BufferedReader br = new BufferedReader(new FileReader("D:\\REPOSITORIOS\\REC\\Indexacion\\src\\Preprocesamiento\\empty.txt"));
         String TerminoVacio;
 
         while ((TerminoVacio = br.readLine()) != null) {
             listaTerminosDocumento.remove(TerminoVacio);
-            while (listaTerminosDocumento.contains(TerminoVacio)) {
+            while (listaTerminosDocumento.contains(TerminoVacio)){
                 listaTerminosDocumento.remove(TerminoVacio);
             }
         }
-
     }
 
     //Método para aplicar el preprocesamiento
