@@ -42,6 +42,7 @@ public class Main {
             ArrayList<String> listaTerminosConsulta = new ArrayList<>();
             listaTerminosConsulta = preprocesamiento.preprocesar(TextoConsulta);
 
+
             //Leemos los documentos
             leerFicheroLongitudPeso();
             leerFicheroIndiceInvertido();
