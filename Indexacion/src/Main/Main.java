@@ -42,6 +42,9 @@ public class Main {
         ArrayList<String> listaTerminos;
         preprocesamiento preprocesamiento = new preprocesamiento();
 
+        int i = 0;
+
+
         System.out.println("Preprocesando documentos...");
         //Recorremos la lista de archivos
         for(File documento : listaDocumentos){
@@ -56,6 +59,8 @@ public class Main {
             //Almacenamos en el map(termino y la frecuencia) respecto a todos los documentos
             calcularTF_paso1(listaTerminos);
             calcularTF_paso2(Paths.get(documento.getAbsolutePath()).getFileName().toString());
+            System.out.println("Preprocesando documento " + i + " de " + listaDocumentos.length);
+            i++;
         }
 
         //Calculamos el IDF
@@ -65,47 +70,56 @@ public class Main {
         escribirFicheroLongitudPeso();
         escribirFicheroIndiceInvertido();
 
+        System.out.println("3");
+
+        for (String Documento : LongitudPeso.keySet()) {
+            System.out.println("3");
+            System.out.println(Documento + " -> " + LongitudPeso.get(Documento));
+        }
+
         System.out.println("Preprocesamiento finalizado");
     }
 
     public static void calcularTF_paso1(ArrayList<String> listaTerminos) {
-        for (String termino : listaTerminos) {
-            if (FrecuenciaTermino.containsKey(termino)) {
-                FrecuenciaTermino.put(termino, FrecuenciaTermino.get(termino) + 1);
+        for(String sTerm : listaTerminos){
+            if(FrecuenciaTermino.containsKey(sTerm)) {
+                FrecuenciaTermino.put(sTerm, FrecuenciaTermino.get(sTerm) + 1);
             } else {
-                FrecuenciaTermino.put(termino, 1);
+                FrecuenciaTermino.put(sTerm, 1);
             }
         }
     }
 
     public static void calcularTF_paso2(String nombreDocumento) {
-        for (String FT : FrecuenciaTermino.keySet()) {
-            double tf = (double) 1 + Math.log(FrecuenciaTermino.get(FT)) / Math.log(2);
+        for (String sTerm : FrecuenciaTermino.keySet()) {
+            double tf = (double) 1 + Math.log(FrecuenciaTermino.get(sTerm)) / Math.log(2);
 
-            if(!IndiceInvertido.containsKey(FT)) IndiceInvertido.put(FT, new StructIndiceInvertido());
+            if(!IndiceInvertido.containsKey(sTerm)) IndiceInvertido.put(sTerm, new StructIndiceInvertido());
 
-            IndiceInvertido.get(FT).parejaDocIDPeso.put(nombreDocumento, tf);
+            IndiceInvertido.get(sTerm).parejaDocIDPeso.put(nombreDocumento, tf);
         }
     }
 
-    public static void calcularIDF(int numDocumentos) {
-        for (String Termino : IndiceInvertido.keySet()) {
-            double idf = (double) numDocumentos / IndiceInvertido.get(Termino).parejaDocIDPeso.size();
-            IndiceInvertido.get(Termino).asignarIDF(idf);
+    public static void calcularIDF(int nDocs) {
+        for (String sTerm : IndiceInvertido.keySet()) {
+            double idf = (double) nDocs / IndiceInvertido.get(sTerm).parejaDocIDPeso.size();
+            IndiceInvertido.get(sTerm).asignarIDF(idf);
 
-            //Calculamos la LongitudPeso
-            for (String sDoc : IndiceInvertido.get(Termino).parejaDocIDPeso.keySet()) {
-                double peso = IndiceInvertido.get(Termino).parejaDocIDPeso.get(sDoc) * IndiceInvertido.get(Termino).obtenerIDF();
+            //calcular peso de cada documento
+            for (String sDoc : IndiceInvertido.get(sTerm).parejaDocIDPeso.keySet()) {
+                double peso = IndiceInvertido.get(sTerm).parejaDocIDPeso.get(sDoc) * IndiceInvertido.get(sTerm).obtenerIDF();
 
-                if(LongitudPeso.containsKey(sDoc)){
-                    LongitudPeso.put(sDoc, LongitudPeso.get(sDoc) + Math.pow(peso, 2));
-                }
-                else{LongitudPeso.put(sDoc, 0.0);}
+                if(!LongitudPeso.containsKey(sDoc)) LongitudPeso.put(sDoc, 0.0);
+                LongitudPeso.put(sDoc, LongitudPeso.get(sDoc) +  peso);
             }
+        }
+        for(String sDoc : LongitudPeso.keySet()) {
+            LongitudPeso.put(sDoc, Math.sqrt(LongitudPeso.get(sDoc)));
         }
     }
 
     public static void escribirFicheroLongitudPeso(){
+        System.out.println("Escribiendo fichero LongitudPeso...");
         FileWriter fichero = null;
         PrintWriter pw ;
         try

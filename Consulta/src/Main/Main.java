@@ -33,9 +33,10 @@ public class Main {
         //Por cada búsqueda
         do{
             //Solicitamos uan consulta
-            System.out.print("Introduzca una consulta -> ");
+            System.out.print("| Introduzca una consulta | -> ");
             Scanner out = new Scanner(System.in);
             String TextoConsulta = out.nextLine();
+
 
             //String y ArrayList de términos de la consulta
             ArrayList<String> listaTerminosConsulta = new ArrayList<>();
@@ -45,8 +46,9 @@ public class Main {
             leerFicheroLongitudPeso();
             leerFicheroIndiceInvertido();
 
-            System.out.println("RESULTADO DE LA BÚSQUEDA");
-            System.out.println("--------------------------------------------------");
+            System.out.println("\n================================================================");
+            System.out.println("\t\t\tRESULTADO DE LA BÚSQUEDA");
+            System.out.println("================================================================");
 
             //Hacemos ranking
             ranking(listaTerminosConsulta);
@@ -54,27 +56,21 @@ public class Main {
             //Ordenamos el ranking
             ordenarRanking();
 
-
-            if(rankingOrdenado.size() < 10) {
-                if (rankingOrdenado.size() == 0) {
-                    System.out.println("No results found");
-                } else {
-                    for (int i = 0; i < rankingOrdenado.size(); i++) {
-                        System.out.println("Id Documento: " + rankingOrdenado.get(i).docID + " Peso: " + rankingOrdenado.get(i).peso + "\n");
-                    }
-                }
-            }else{
-                for (int i = 0; i < 10; i++) {
-                    System.out.println("Id Documento: " + rankingOrdenado.get(i).docID + " Peso: " + rankingOrdenado.get(i).peso + "\n");
+            //Mostramos el ranking
+            if (rankingOrdenado.size() == 0) {
+                System.out.println("No se han encontrado resultados");
+            } else {
+                for (int i = 0; i < 20; i++) {
+                    System.out.println("Titulo: " + obtenerTitulo(rankingOrdenado.get(i).docID));
+                    System.out.println("Id del documento: " + rankingOrdenado.get(i).docID + "\nPeso: " + rankingOrdenado.get(i).peso + "\n");
                 }
             }
 
-
-            System.out.println("Consulta finalizada");
-
             //Preguntar si se quiere seguir buscando
-            System.out.println("Desea realizar otra consulta? (S/N)");
+            System.out.println("----------------------------------------------------------------");
+            System.out.print("Desea realizar otra consulta? (S/N) ==> ");
             String opcion = out.nextLine();
+            System.out.println("----------------------------------------------------------------");
             if(opcion.equals("N")){
                 consulta_finalizada = true;
             }
@@ -82,56 +78,65 @@ public class Main {
     }
 
     public static void ranking(ArrayList<String> listaTerminosConsulta) throws Exception{
-        for (String termino : listaTerminosConsulta) {
-            if(IndiceInvertido.containsKey(termino)){
-                for(String doc : IndiceInvertido.get(termino).parejaDocIDPeso.keySet()){
-                    double peso = IndiceInvertido.get(termino).parejaDocIDPeso.get(doc) * IndiceInvertido.get(termino).obtenerIDF();
-                    if(docRecuperados.containsKey(doc)){
-                        docRecuperados.put(doc, docRecuperados.get(doc) + peso);
-                    }else{
-                        docRecuperados.put(doc, peso);
-                    }
+        for (String sTermino : listaTerminosConsulta) {
+            if(IndiceInvertido.containsKey(sTermino)) {
+                for(String sDocIdpeso : IndiceInvertido.get(sTermino).parejaDocIDPeso.keySet()) {
+                    //calculamos el peso
+                    double dPeso = IndiceInvertido.get(sTermino).parejaDocIDPeso.get(sDocIdpeso) * IndiceInvertido.get(sTermino).obtenerIDF();
+                    //System.out.println("Peso: " + indiceInvertido.get(sTermino).docId.get(sDocIdpeso));
+                    //añadimos el peso al docId
+                    if(docRecuperados.containsKey(sDocIdpeso)) docRecuperados.put(sDocIdpeso, docRecuperados.get(sDocIdpeso) + dPeso);
+                    else docRecuperados.put(sDocIdpeso, dPeso);
                 }
+
             }
         }
-        for(String doc : docRecuperados.keySet()) {
-            //System.out.println(" Peso: " + docId.get(sDocId) + "" + longDocumento.get(sDocId));
-            docRecuperados.put(doc, docRecuperados.get(doc) / LongitudPeso.get(doc));
+        System.out.println(docRecuperados);
+        for(String sDocId : docRecuperados.keySet()) {
+            System.out.println(" Peso: " + docRecuperados.get(sDocId) + " Long: " + LongitudPeso.get(sDocId));
+            //System.out.println("hola");
+            docRecuperados.put(sDocId, docRecuperados.get(sDocId) / LongitudPeso.get(sDocId));
+            System.out.println(" PesoTRAS DIVIDIR: " + docRecuperados.get(sDocId) + " Long TRAS DIVIDIr: " + LongitudPeso.get(sDocId));
         }
     }
 
     public static void ordenarRanking(){
-        List<String> aKeys = new ArrayList<>(docRecuperados.keySet());
-        List<Double> aValues = new ArrayList<>(docRecuperados.values());
+        List<String> listaClave = new ArrayList<>(docRecuperados.keySet());
+        List<Double> listaValores = new ArrayList<>(docRecuperados.values());
 
-        for (int i = 0; i < aKeys.size(); i++) {
-            rankingOrdenado.add(new Ranking(aKeys.get(i), aValues.get(i)));
+        for (int i = 0; i < listaClave.size(); i++) {
+            rankingOrdenado.add(new Ranking(listaClave.get(i), listaValores.get(i)));
         }
 
-
         Collections.sort(rankingOrdenado, Comparator.comparing(Ranking::obtenerPeso));
+        Collections.reverse(rankingOrdenado);
     }
 
-    //Función para leer el fichero y almacenarlo en el Map
-    public static void leerFicheroLongitudPeso() {
+    public static String obtenerTitulo(String documento) throws Exception{
         File archivo;
         FileReader fr = null;
         BufferedReader br;
 
-        try {
-            archivo = new File ("..\\longDocumentos.txt");
-            fr = new FileReader (archivo);
-            br = new BufferedReader(fr);
+        archivo = new File ("C:\\Users\\carlo\\Desktop\\REC\\corpus\\" + documento);
+        fr = new FileReader (archivo);
+        br = new BufferedReader(fr);
 
-            String linea;
-            while((linea=br.readLine())!=null) {
-                LongitudPeso.put(linea.split(" ")[0], Double.parseDouble(linea.split(" ")[1]));
+        return br.readLine();
+    }
+
+    //Función para leer el fichero y almacenarlo en el Map
+    public static void leerFicheroLongitudPeso() throws Exception{
+        String filePath = "C:\\Users\\carlo\\Desktop\\REC\\longDocumentos.txt";
+
+        String line;
+        BufferedReader reader = new BufferedReader(new FileReader(filePath));
+        while ((line = reader.readLine()) != null)
+        {
+            String[] parts = line.split(" ", 2);
+            if (parts.length >= 2)
+            {
+                LongitudPeso.put(parts[0], Double.parseDouble(parts[1]));
             }
-        }
-        catch(Exception e){e.printStackTrace();}
-        finally{
-            try{if( null != fr ){fr.close();}
-            }catch (Exception e2){e2.printStackTrace();}
         }
     }
 
@@ -143,10 +148,8 @@ public class Main {
             IndiceInvertido.put(almacenJson.Termino, new StructDocIdPeso());
             IndiceInvertido.get(almacenJson.Termino).asignarIDF(almacenJson.IDF);
             for(structJson structJson : almacenJson.almacen) {
-                //System.out.println(containerDocId.iPeso);
                 IndiceInvertido.get(almacenJson.Termino).parejaDocIDPeso.put(structJson.docID, structJson.peso);
             }
         }
     }
-
 }
