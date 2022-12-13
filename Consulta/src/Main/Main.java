@@ -83,20 +83,14 @@ public class Main {
                 for(String sDocIdpeso : IndiceInvertido.get(sTermino).parejaDocIDPeso.keySet()) {
                     //calculamos el peso
                     double dPeso = IndiceInvertido.get(sTermino).parejaDocIDPeso.get(sDocIdpeso) * IndiceInvertido.get(sTermino).obtenerIDF();
-                    //System.out.println("Peso: " + indiceInvertido.get(sTermino).docId.get(sDocIdpeso));
                     //añadimos el peso al docId
                     if(docRecuperados.containsKey(sDocIdpeso)) docRecuperados.put(sDocIdpeso, docRecuperados.get(sDocIdpeso) + dPeso);
                     else docRecuperados.put(sDocIdpeso, dPeso);
                 }
-
             }
         }
-        System.out.println(docRecuperados);
         for(String sDocId : docRecuperados.keySet()) {
-            System.out.println(" Peso: " + docRecuperados.get(sDocId) + " Long: " + LongitudPeso.get(sDocId));
-            //System.out.println("hola");
             docRecuperados.put(sDocId, docRecuperados.get(sDocId) / LongitudPeso.get(sDocId));
-            System.out.println(" PesoTRAS DIVIDIR: " + docRecuperados.get(sDocId) + " Long TRAS DIVIDIr: " + LongitudPeso.get(sDocId));
         }
     }
 
@@ -117,7 +111,7 @@ public class Main {
         FileReader fr = null;
         BufferedReader br;
 
-        archivo = new File ("C:\\Users\\carlo\\Desktop\\REC\\corpus\\" + documento);
+        archivo = new File ("C:\\Users\\Usuario\\Desktop\\REC\\corpus\\" + documento);
         fr = new FileReader (archivo);
         br = new BufferedReader(fr);
 
@@ -126,7 +120,7 @@ public class Main {
 
     //Función para leer el fichero y almacenarlo en el Map
     public static void leerFicheroLongitudPeso() throws Exception{
-        String filePath = "C:\\Users\\carlo\\Desktop\\REC\\longDocumentos.txt";
+        String filePath = "C:\\Users\\Usuario\\Desktop\\REC\\longDocumentos.txt";
 
         String line;
         BufferedReader reader = new BufferedReader(new FileReader(filePath));
@@ -142,7 +136,7 @@ public class Main {
 
     public static void leerFicheroIndiceInvertido() throws Exception{
         Gson gson = new Gson();
-        BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\carlo\\Desktop\\REC\\IndiceInvertido.json"));
+        BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Usuario\\Desktop\\REC\\IndiceInvertido.json"));
         Json json = gson.fromJson(br, Json.class);
         for(AlmacenJson almacenJson : json.lista){
             IndiceInvertido.put(almacenJson.Termino, new StructDocIdPeso());

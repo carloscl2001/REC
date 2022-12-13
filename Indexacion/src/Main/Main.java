@@ -59,7 +59,7 @@ public class Main {
             //Almacenamos en el map(termino y la frecuencia) respecto a todos los documentos
             calcularTF_paso1(listaTerminos);
             calcularTF_paso2(Paths.get(documento.getAbsolutePath()).getFileName().toString());
-            System.out.println("Preprocesando documento " + i + " de " + listaDocumentos.length);
+            //System.out.println("Preprocesando documento " + i + " de " + listaDocumentos.length);
             i++;
         }
 
@@ -124,7 +124,7 @@ public class Main {
         PrintWriter pw ;
         try
         {
-            fichero = new FileWriter("C:\\Users\\carlo\\Desktop\\REC\\longDocumentos.txt");
+            fichero = new FileWriter("C:\\Users\\Usuario\\Desktop\\REC\\longDocumentos.txt");
             pw = new PrintWriter(fichero);
 
             for (String Documento : LongitudPeso.keySet()) {
@@ -143,7 +143,7 @@ public class Main {
     }
 
     public static void escribirFicheroIndiceInvertido() {
-        String path = "C:\\Users\\carlo\\Desktop\\REC\\IndiceInvertido.json";
+        String path = "C:\\Users\\Usuario\\Desktop\\REC\\IndiceInvertido.json";
         Json json = new Json();
         List<structJson> sJson = new ArrayList<structJson>();
         try (PrintWriter out = new PrintWriter(new FileWriter(path))) {
