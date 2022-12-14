@@ -81,12 +81,12 @@ public class Main {
     public static void ranking(ArrayList<String> listaTerminosConsulta) throws Exception{
         for (String sTermino : listaTerminosConsulta) {
             if(IndiceInvertido.containsKey(sTermino)) {
-                for(String sDocIdpeso : IndiceInvertido.get(sTermino).parejaDocIDPeso.keySet()) {
+                for(String DocIdpeso : IndiceInvertido.get(sTermino).parejaDocIDPeso.keySet()) {
                     //calculamos el peso
-                    double dPeso = IndiceInvertido.get(sTermino).parejaDocIDPeso.get(sDocIdpeso) * IndiceInvertido.get(sTermino).obtenerIDF();
+                    double dPeso = IndiceInvertido.get(sTermino).parejaDocIDPeso.get(DocIdpeso) * IndiceInvertido.get(sTermino).obtenerIDF();
                     //añadimos el peso al docId
-                    if(docRecuperados.containsKey(sDocIdpeso)) docRecuperados.put(sDocIdpeso, docRecuperados.get(sDocIdpeso) + dPeso);
-                    else docRecuperados.put(sDocIdpeso, dPeso);
+                    if(docRecuperados.containsKey(DocIdpeso)) docRecuperados.put(DocIdpeso, docRecuperados.get(DocIdpeso) + dPeso);
+                    else docRecuperados.put(DocIdpeso, dPeso);
                 }
             }
         }

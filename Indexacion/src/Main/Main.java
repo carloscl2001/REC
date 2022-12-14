@@ -18,7 +18,7 @@ import com.google.gson.Gson;
 
 public class Main {
     //Map del TF
-    static HashMap<String, Integer> FrecuenciaTermino;
+    static HashMap<String, Double> FrecuenciaTermino;
 
     //Map del IDF
     static HashMap<String, StructIndiceInvertido> IndiceInvertido = new HashMap<String, StructIndiceInvertido>();
@@ -42,26 +42,24 @@ public class Main {
         ArrayList<String> listaTerminos;
         preprocesamiento preprocesamiento = new preprocesamiento();
 
-        int i = 0;
 
-
-        System.out.println("Preprocesando documentos...");
         //Recorremos la lista de archivos
-        for(File documento : listaDocumentos){
-            TextoDocumento = new String(Files.readAllBytes(Paths.get(documento.getAbsolutePath())));
+        for(int i = 0; i < listaDocumentos.length; i++){
+            TextoDocumento = new String(Files.readAllBytes(Paths.get(listaDocumentos[i].getAbsolutePath())));
 
             //Aplicamos el preprocesamiento al documento y guardamos los términos en una lista
             listaTerminos = preprocesamiento.preprocesar(TextoDocumento);
 
             //Creamos un objeto TF
-            FrecuenciaTermino = new HashMap<String, Integer>();
+            FrecuenciaTermino = new HashMap<String, Double>();
 
             //Almacenamos en el map(termino y la frecuencia) respecto a todos los documentos
+            //Calculamos IDF
             calcularTF_paso1(listaTerminos);
-            calcularTF_paso2(Paths.get(documento.getAbsolutePath()).getFileName().toString());
-            //System.out.println("Preprocesando documento " + i + " de " + listaDocumentos.length);
-            i++;
+            calcularTF_paso2(Paths.get(listaDocumentos[i].getAbsolutePath()).getFileName().toString());
         }
+        System.out.println("Preprocesamiento finalizado");
+        System.out.println("-----------------------------------------------|");
 
         //Calculamos el IDF
         calcularIDF(listaDocumentos.length);
@@ -69,52 +67,52 @@ public class Main {
         //escribirFicheros
         escribirFicheroLongitudPeso();
         escribirFicheroIndiceInvertido();
-
-        System.out.println("3");
-
-        for (String Documento : LongitudPeso.keySet()) {
-            System.out.println("3");
-            System.out.println(Documento + " -> " + LongitudPeso.get(Documento));
-        }
-
-        System.out.println("Preprocesamiento finalizado");
+        System.out.println("-----------------------------------------------|");
+        System.out.println("Indezación finalizada");
     }
 
     public static void calcularTF_paso1(ArrayList<String> listaTerminos) {
-        for(String sTerm : listaTerminos){
-            if(FrecuenciaTermino.containsKey(sTerm)) {
-                FrecuenciaTermino.put(sTerm, FrecuenciaTermino.get(sTerm) + 1);
+
+        for(String Termino : listaTerminos) {
+            if(FrecuenciaTermino.containsKey(Termino)) {
+                double f = FrecuenciaTermino.get(Termino);
+                FrecuenciaTermino.put(Termino, f + 1);
             } else {
-                FrecuenciaTermino.put(sTerm, 1);
+                FrecuenciaTermino.put(Termino, 1.0);
             }
         }
     }
 
-    public static void calcularTF_paso2(String nombreDocumento) {
-        for (String sTerm : FrecuenciaTermino.keySet()) {
-            double tf = (double) 1 + Math.log(FrecuenciaTermino.get(sTerm)) / Math.log(2);
+    public static void calcularTF_paso2(String NombreFichero) throws Exception{
+        for (String Termino: FrecuenciaTermino.keySet()) {
+            double tf = (double) 1 + Math.log(FrecuenciaTermino.get(Termino)) / Math.log(2);
 
-            if(!IndiceInvertido.containsKey(sTerm)) IndiceInvertido.put(sTerm, new StructIndiceInvertido());
+            if(!IndiceInvertido.containsKey(Termino)) {
+                IndiceInvertido.put(Termino, new StructIndiceInvertido());
+            }
+            IndiceInvertido.get(Termino).parejaDocIDPeso.put(NombreFichero, tf);
 
-            IndiceInvertido.get(sTerm).parejaDocIDPeso.put(nombreDocumento, tf);
         }
     }
 
-    public static void calcularIDF(int nDocs) {
-        for (String sTerm : IndiceInvertido.keySet()) {
-            double idf = (double) nDocs / IndiceInvertido.get(sTerm).parejaDocIDPeso.size();
-            IndiceInvertido.get(sTerm).asignarIDF(idf);
+    public static void calcularIDF (int numeroDocumentos) {
+        for (String Termino : IndiceInvertido.keySet()) {
+            double idf = (double) numeroDocumentos / IndiceInvertido.get(Termino).parejaDocIDPeso.size();
+            IndiceInvertido.get(Termino).asignarIDF(idf);
 
-            //calcular peso de cada documento
-            for (String sDoc : IndiceInvertido.get(sTerm).parejaDocIDPeso.keySet()) {
-                double peso = IndiceInvertido.get(sTerm).parejaDocIDPeso.get(sDoc) * IndiceInvertido.get(sTerm).obtenerIDF();
+            for (String Documento : IndiceInvertido.get(Termino).parejaDocIDPeso.keySet()) {
+                double peso =IndiceInvertido.get(Termino).parejaDocIDPeso.get(Documento) * IndiceInvertido.get(Termino).obtenerIDF();
 
-                if(!LongitudPeso.containsKey(sDoc)) LongitudPeso.put(sDoc, 0.0);
-                LongitudPeso.put(sDoc, LongitudPeso.get(sDoc) +  peso);
+                if(LongitudPeso.containsKey(Documento)) {
+                    LongitudPeso.put(Documento, LongitudPeso.get(Documento) +  peso);
+                }
+                else {
+                    LongitudPeso.put(Documento, 0.0);
+                }
             }
         }
-        for(String sDoc : LongitudPeso.keySet()) {
-            LongitudPeso.put(sDoc, Math.sqrt(LongitudPeso.get(sDoc)));
+        for(String Documento : LongitudPeso.keySet()) {
+            LongitudPeso.put(Documento, Math.sqrt(LongitudPeso.get(Documento)));
         }
     }
 
@@ -124,16 +122,19 @@ public class Main {
         PrintWriter pw ;
         try
         {
-            fichero = new FileWriter("C:\\Users\\Usuario\\Desktop\\REC\\longDocumentos.txt");
+            fichero = new FileWriter("C:\\Users\\Usuario\\Desktop\\REC\\LongDocumentos.txt");
             pw = new PrintWriter(fichero);
 
-            for (String Documento : LongitudPeso.keySet()) {
-                pw.println(Documento + " " + LongitudPeso.get(Documento));
+            for (String sDoc : LongitudPeso.keySet()) {
+                //imprmir en fichero peso.txt
+                pw.println(sDoc + " " + LongitudPeso.get(sDoc));
             }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             try {
+                // Nuevamente aprovechamos el finally para
+                // asegurarnos que se cierra el fichero.
                 if (null != fichero)
                     fichero.close();
             } catch (Exception e2) {
@@ -142,18 +143,20 @@ public class Main {
         }
     }
 
+
     public static void escribirFicheroIndiceInvertido() {
+        System.out.println("Escribiendo fichero IndiceInvertido...");
         String path = "C:\\Users\\Usuario\\Desktop\\REC\\IndiceInvertido.json";
         Json json = new Json();
         List<structJson> sJson = new ArrayList<structJson>();
         try (PrintWriter out = new PrintWriter(new FileWriter(path))) {
             Gson gson = new Gson();
-            for (String sTerm :IndiceInvertido.keySet()) {
+            for (String Termino :IndiceInvertido.keySet()) {
                 sJson = new ArrayList<structJson>();
-                for (String sDoc : IndiceInvertido.get(sTerm).parejaDocIDPeso.keySet()) {
-                    sJson.add(new structJson(sDoc, IndiceInvertido.get(sTerm).parejaDocIDPeso.get(sDoc)));
+                for (String sDoc : IndiceInvertido.get(Termino).parejaDocIDPeso.keySet()) {
+                    sJson.add(new structJson(sDoc, IndiceInvertido.get(Termino).parejaDocIDPeso.get(sDoc)));
                 }
-                json.lista.add(new AlmacenJson(sTerm, IndiceInvertido.get(sTerm).obtenerIDF(), sJson));
+                json.lista.add(new AlmacenJson(Termino, IndiceInvertido.get(Termino).obtenerIDF(), sJson));
             }
             String jsonString = gson.toJson(json);
             out.write(jsonString);
