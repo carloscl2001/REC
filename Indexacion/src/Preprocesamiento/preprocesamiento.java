@@ -21,7 +21,6 @@ public class preprocesamiento {
         gfCaracteres.anadir(new filtro("\\p{Punct}", " "));
         //eliminamos los numeros
         gfCaracteres.anadir(new filtro("[^A-Za-z]", " "));
-        gfCaracteres.anadir(new filtro("[^-\\w]+", " "));
         gfCaracteres.anadir(new filtro("\\b[0-9]+\\b", " "));
         //eliminamos los "-" que no sean guiones
         gfCaracteres.anadir(new filtro("-+ | -+", " "));

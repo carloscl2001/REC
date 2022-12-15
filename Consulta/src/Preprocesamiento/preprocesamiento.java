@@ -21,10 +21,14 @@ public class preprocesamiento {
         gfCaracteres.anadir(new filtro("\\p{Punct}", " "));
         //eliminamos los numeros
         gfCaracteres.anadir(new filtro("[^A-Za-z]", " "));
+        gfCaracteres.anadir(new filtro("\\b[0-9]+\\b", " "));
         //eliminamos los "-" que no sean guiones
         gfCaracteres.anadir(new filtro("-+ | -+", " "));
         //eliminamos los espacios duplicados
         gfCaracteres.anadir(new filtro(" +", " "));
+        //eliminamos los espacios al principio y al final
+        gfCaracteres.anadir(new filtro("^\\s*", ""));
+        gfCaracteres.anadir(new filtro("\\s*$", ""));
     }
 
     //Método para eliminar los términos vacíos de la lista de términos
@@ -50,6 +54,8 @@ public class preprocesamiento {
 
         //Aplicamos los filtros
         gfCaracteres.aplicar(TextoConsulta);
+
+
 
         //Dividimos el texto en términos y los guardamos en una lista
         ArrayList<String> listaTerminosConsulta = new ArrayList<>(Arrays.asList(TextoConsulta.split("[ ||\n]")));

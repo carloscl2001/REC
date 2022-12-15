@@ -10,17 +10,14 @@ import java.io.FileReader;
 import java.util.*;
 
 public class Main {
-    //Map de la longitud del peso
-    static HashMap<String, Double> LongitudPeso = new HashMap<>();
+    //Map de la longitud del documento -> HashMap(Documento, Peso)
+    static HashMap<String, Double> LongitudDocumento = new HashMap<>();
 
-    //Map del IDF
+    //Map del IDF -> HashMap(Termino, HashMap<IDF, HashMap(DocID,peso)> )
     static HashMap<String, StructDocIdPeso> IndiceInvertido = new HashMap<>();
 
-    //Map de la consulta
+    //Map de la consulta -> HashMap(DocID, Peso)
     static HashMap<String, Double> docRecuperados = new HashMap<>();
-
-    //Lista de ranking
-    static List<Ranking> rankingOrdenado = new ArrayList<>();
 
 
     public static void main(String[] args) throws Exception {
@@ -42,7 +39,6 @@ public class Main {
             ArrayList<String> listaTerminosConsulta = new ArrayList<>();
             listaTerminosConsulta = preprocesamiento.preprocesar(TextoConsulta);
 
-
             //Leemos los documentos
             leerFicheroLongitudPeso();
             leerFicheroIndiceInvertido();
@@ -55,13 +51,14 @@ public class Main {
             ranking(listaTerminosConsulta);
 
             //Ordenamos el ranking
-            ordenarRanking();
+            List<Ranking> rankingOrdenado = new ArrayList<>();
+            ordenarRanking(rankingOrdenado);
 
             //Mostramos el ranking
             if (rankingOrdenado.size() == 0) {
                 System.out.println("No se han encontrado resultados");
             } else {
-                for (int i = 0; i < 20; i++) {
+                for (int i = 0; i < 10; i++) {
                     System.out.println("Titulo: " + obtenerTitulo(rankingOrdenado.get(i).docID));
                     System.out.println("Id del documento: " + rankingOrdenado.get(i).docID + "\nPeso: " + rankingOrdenado.get(i).peso + "\n");
                 }
@@ -78,6 +75,11 @@ public class Main {
         }while(!consulta_finalizada);
     }
 
+    /**
+     * Método que genera el ranking de los documentos recuperados y lo almacena en el HashMap docRecuperados
+     * @throws Exception
+     * @param listaTerminosConsulta ArrayList de términos de la consulta
+     */
     public static void ranking(ArrayList<String> listaTerminosConsulta) throws Exception{
         for (String sTermino : listaTerminosConsulta) {
             if(IndiceInvertido.containsKey(sTermino)) {
@@ -91,11 +93,15 @@ public class Main {
             }
         }
         for(String sDocId : docRecuperados.keySet()) {
-            docRecuperados.put(sDocId, docRecuperados.get(sDocId) / LongitudPeso.get(sDocId));
+            docRecuperados.put(sDocId, docRecuperados.get(sDocId) / LongitudDocumento.get(sDocId));
         }
     }
 
-    public static void ordenarRanking(){
+    /**
+     * Función que ordena el ranking
+     * @param rankingOrdenado Lista de ranking
+     */
+    public static void ordenarRanking(List<Ranking>rankingOrdenado) {
         List<String> listaClave = new ArrayList<>(docRecuperados.keySet());
         List<Double> listaValores = new ArrayList<>(docRecuperados.values());
 
@@ -107,21 +113,29 @@ public class Main {
         Collections.reverse(rankingOrdenado);
     }
 
+    /**
+     * Función que devuelve el título de un documento
+     * @param documento documento a devolver el título
+     * @throws Exception
+     */
     public static String obtenerTitulo(String documento) throws Exception{
         File archivo;
         FileReader fr = null;
         BufferedReader br;
 
-        archivo = new File ("C:\\Users\\Usuario\\Desktop\\REC\\corpus\\" + documento);
+        archivo = new File ("C:\\Users\\carlo\\Desktop\\REC\\corpus\\" + documento);
         fr = new FileReader (archivo);
         br = new BufferedReader(fr);
 
         return br.readLine();
     }
 
-    //Función para leer el fichero y almacenarlo en el Map
+    /**
+     * Método que lee el fichero de LongitudDocumento y peso
+     * @throws Exception
+     */
     public static void leerFicheroLongitudPeso() throws Exception{
-        String filePath = "C:\\Users\\Usuario\\Desktop\\REC\\longDocumentos.txt";
+        String filePath = "C:\\Users\\carlo\\Desktop\\REC\\longDocumentos.txt";
 
         String line;
         BufferedReader reader = new BufferedReader(new FileReader(filePath));
@@ -130,14 +144,18 @@ public class Main {
             String[] parts = line.split(" ", 2);
             if (parts.length >= 2)
             {
-                LongitudPeso.put(parts[0], Double.parseDouble(parts[1]));
+                LongitudDocumento.put(parts[0], Double.parseDouble(parts[1]));
             }
         }
     }
 
+    /**
+     * Función para leer el fichero de IndiceInvertido y almacenarlo en el Map
+     * @throws Exception
+     */
     public static void leerFicheroIndiceInvertido() throws Exception{
         Gson gson = new Gson();
-        BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Usuario\\Desktop\\REC\\IndiceInvertido.json"));
+        BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\carlo\\Desktop\\REC\\IndiceInvertido.json"));
         Json json = gson.fromJson(br, Json.class);
         for(AlmacenJson almacenJson : json.lista){
             IndiceInvertido.put(almacenJson.Termino, new StructDocIdPeso());
