@@ -29,6 +29,7 @@ public class Main {
 
         //Por cada búsqueda
         do{
+            docRecuperados = new HashMap<>();
             //Solicitamos uan consulta
             System.out.print("| Introduzca una consulta | -> ");
             Scanner out = new Scanner(System.in);
@@ -84,9 +85,9 @@ public class Main {
         for (String sTermino : listaTerminosConsulta) {
             if(IndiceInvertido.containsKey(sTermino)) {
                 for(String DocIdpeso : IndiceInvertido.get(sTermino).parejaDocIDPeso.keySet()) {
-                    //calculamos el peso
-                    double dPeso = IndiceInvertido.get(sTermino).parejaDocIDPeso.get(DocIdpeso) * IndiceInvertido.get(sTermino).obtenerIDF();
-                    //añadimos el peso al docId
+                    //Calculamos el peso
+                    double dPeso = IndiceInvertido.get(sTermino).parejaDocIDPeso.get(DocIdpeso) * IndiceInvertido.get(sTermino).obtenerIDF() * IndiceInvertido.get(sTermino).obtenerIDF();
+                    //Añadimos el peso al docId
                     if(docRecuperados.containsKey(DocIdpeso)) docRecuperados.put(DocIdpeso, docRecuperados.get(DocIdpeso) + dPeso);
                     else docRecuperados.put(DocIdpeso, dPeso);
                 }

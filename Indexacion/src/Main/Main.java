@@ -107,12 +107,12 @@ public class Main {
      */
     public static void calcularIDF (int numeroDocumentos) {
         for (String Termino : IndiceInvertido.keySet()) {
-            double idf = (double) numeroDocumentos / IndiceInvertido.get(Termino).parejaDocIDPeso.size();
+            double idf = (double) Math.log(numeroDocumentos / IndiceInvertido.get(Termino).parejaDocIDPeso.size()) / Math.log(2);
             IndiceInvertido.get(Termino).asignarIDF(idf);
 
             //Calculamos la longitud del peso
             for (String Documento : IndiceInvertido.get(Termino).parejaDocIDPeso.keySet()) {
-                double peso =IndiceInvertido.get(Termino).parejaDocIDPeso.get(Documento) * IndiceInvertido.get(Termino).obtenerIDF();
+                double peso = Math.pow(IndiceInvertido.get(Termino).parejaDocIDPeso.get(Documento) * IndiceInvertido.get(Termino).obtenerIDF(),2);
 
                 if(LongitudDocumento.containsKey(Documento)) {
                     LongitudDocumento.put(Documento, LongitudDocumento.get(Documento) +  peso);
