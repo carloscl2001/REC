@@ -88,6 +88,5 @@ public class Crawler {
         }
         executor.shutdown();
         while (!executor.isTerminated()) {}
-
     }
 }
